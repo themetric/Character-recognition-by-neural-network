@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-# Autor: Petr Vácha
-#	Název: Backpropagation NN
+# Author: Petr Vácha
+#	Name: Backpropagation NN
 #
 ###############################################################################
 import math
@@ -14,7 +14,6 @@ firstLayer = 6
 hiddenLayer = 11
 lastLayer = 10
 mi = 0.5
-
 
 directory = "./tset/"
 directoryTest = "./cset/"
@@ -59,7 +58,7 @@ def learn(firstLayer =4, hiddenLayer =7, lastLayer =10, lamda =0.5, mi =0.6):
 	iteration = 0
 	while (GlobalErr == 0.0 or GlobalErr > 1.8 and iteration < 500):
 		if  iteration == 10 or iteration == 25 or iteration == 50 or iteration == 100 or iteration % 200 == 0:
-			print iteration, u"Globální chyba: ", GlobalErr
+			print iteration, u"Global Error: ", GlobalErr
 		iteration = iteration+1
 		##if GlobalErr:
 		##	print lastPerceptrons[0].getOutput(), lastPerceptrons[1].getOutput(), lastPerceptrons[2].getOutput(), lastPerceptrons[5].getOutput()
@@ -133,7 +132,7 @@ def learn(firstLayer =4, hiddenLayer =7, lastLayer =10, lamda =0.5, mi =0.6):
 
 ###############################################################################
 def checkNN():
-	print u"Výsledek naučené neuronové sítě:"
+	print u"Resulting Learned NN:"
 	for k in vectors.keys():
 		for i in range(firstLayer):
 			for y in range(len(vectors[k])):
@@ -168,7 +167,7 @@ def checkNN():
 ###############################################################################
 def testNN():
 	vectors = {}
-	print u"Test neuronové sítě:"
+	print u"Test NN:"
 	tset = os.listdir(directoryTest)
 
 	for n in tset:
@@ -212,5 +211,4 @@ def testNN():
 
 learn(firstLayer, hiddenLayer, lastLayer, 0.5, mi)
 checkNN()
-testNN()
-		
+testNN()	

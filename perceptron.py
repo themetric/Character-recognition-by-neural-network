@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ###############################################################################
 #
-# Autor: Petr Vácha
-# Název: Backpropagation NN
+# Author: Petr Vácha
+#   Name: Backpropagation NN
 #
 ###############################################################################
 import sys, os

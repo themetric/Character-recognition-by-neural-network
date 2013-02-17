@@ -9,6 +9,7 @@ import math
 import picture
 import sys, os
 import perceptron
+import matplotlib.pyplot as plot
 
 firstLayer = 6
 hiddenLayer = 11
@@ -41,7 +42,8 @@ vectors = {}
 
 
 ###############################################################################
-def learn(firstLayer =4, hiddenLayer =7, lastLayer =10, lamda =0.5, mi =0.6):
+def learn(firstLayer = 4, hiddenLayer = 7, lastLayer = 10, lamda = 0.5, mi = 0.6):
+	print "Train NN:" 
 	tset = os.listdir(directory)
 	##print tset
 	##sys.exit()##
@@ -92,6 +94,7 @@ def learn(firstLayer =4, hiddenLayer =7, lastLayer =10, lamda =0.5, mi =0.6):
 				lastPerceptrons[i].computeBaseFunction()
 				lastPerceptrons[i].computeOutput()
 
+	#### Check our guess against the actual answer k[0] and set appropriate errors 
 			Err = 0
 			for i in range(lastLayer):
 				if i == int(k[0]):
@@ -102,7 +105,7 @@ def learn(firstLayer =4, hiddenLayer =7, lastLayer =10, lamda =0.5, mi =0.6):
 					lastPerceptrons[i].setDelta((0 - lastPerceptrons[i].getOutput())*lamda*lastPerceptrons[i].getOutput()*(1 - lastPerceptrons[i].getOutput()))
 			GlobalErr = GlobalErr + 0.5 * Err
 
-	####Backpropagation
+	#### Backpropagation
 			for i in range(hiddenLayer):
 				suma = 0
 				for sd in range(lastLayer):
@@ -166,6 +169,8 @@ def checkNN():
 
 ###############################################################################
 def testNN():
+	x_vars = []
+	y_vars = []
 	vectors = {}
 	print u"Test NN:"
 	tset = os.listdir(directoryTest)
@@ -199,16 +204,69 @@ def testNN():
 		for y in range(lastLayer):
 			if max < lastPerceptrons[y].getOutput():
 				max = lastPerceptrons[y].getOutput()
-
+				
+		if int(k[0]) == 6: 
+			for y in range(lastLayer): 			 
+				x_vars.append(y) 
+				y_vars.append(lastPerceptrons[y].getOutput())			
+        
 		for y in range(lastLayer):
-			if int(k[0]) == y:
+			if int(k[0]) == y:					
 				if max == lastPerceptrons[y].getOutput():
 					print k, "OK", lastPerceptrons[y].getOutput()
 				else:
 					print k, "FAIL", lastPerceptrons[y].getOutput()
-
-
+					
+		if int(k[0]) == 6: 
+			plot.plot(x_vars, y_vars, linewidth=2.0, label = k)
 
 learn(firstLayer, hiddenLayer, lastLayer, 0.5, mi)
 checkNN()
 testNN()	
+
+plot.show()
+
+#################################################################################
+
+def readRepoImages():     
+	vectors = {}	
+	tset = os.listdir("./repo")
+
+	for n in tset:
+		p = picture.Picture(os.path.join("./repo", n))
+		v = p.getVector()
+		filename = n.split(".")
+		vectors[filename[0]] = v
+
+	for k in vectors.keys():
+		for i in range(firstLayer):
+			for y in range(len(vectors[k])):
+				inputPerceptrons[i].setInput(y+1, vectors[k][y])
+			inputPerceptrons[i].computeBaseFunction()
+			inputPerceptrons[i].computeOutput()
+
+		for i in range(hiddenLayer):
+			for y in range(firstLayer):
+				hiddenPerceptrons[i].setInput(y+1, inputPerceptrons[y].getOutput())
+			hiddenPerceptrons[i].computeBaseFunction()
+			hiddenPerceptrons[i].computeOutput()
+
+		for i in range(lastLayer):
+			for y in range(hiddenLayer):
+				lastPerceptrons[i].setInput(y+1, hiddenPerceptrons[y].getOutput())
+			lastPerceptrons[i].computeBaseFunction()
+			lastPerceptrons[i].computeOutput()
+
+		max_output = 0.0
+		outputs = {}
+		 
+		for y in range(lastLayer):
+			outputs[y] = lastPerceptrons[y].getOutput()
+			
+		max_output = max(outputs, key= lambda x: outputs[x])
+
+		if int(k[0]) == max_output: 
+			answer = "Correct" 
+		else: 
+			answer = "False" 
+		print k, "Guess:", max_output, " ", answer 

@@ -24,7 +24,8 @@ class Picture:
 
 		tupleList = list(im.getdata())
 		for i in tupleList:
-			greyscale = 0.3*i[0] + 0.59*i[1] + 0.11*i[2]
+			# Convert RGB to grayscale 
+			greyscale = 0.299*i[0] + 0.5870*i[1] + 0.114*i[2]
 			if (self.__threshold < greyscale):
 				self._vector.append(0)
 			else:
